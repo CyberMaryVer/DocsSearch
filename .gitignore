@@ -1,0 +1,9 @@
+/data/embeddings.pk
+/data/project_reestr.csv
+/data/*.zip
+/data/*.xlsx
+/data/*.pdf
+/venv/
+/.idea/
+/tmp.docx
+/wc.png
