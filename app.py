@@ -26,7 +26,7 @@ def main():
         "Векторный поиск - демо",
         "Быстрый поиск - демо",
         "Векторный поиск по заявке",
-        "Информация о проекте"
+        "Информация о команде"
     ]
 
     side_menu_choice = st.sidebar.selectbox("", side_menu_list, key="side_menu")
@@ -51,7 +51,7 @@ def main():
         st_load_docx_and_analyze()
 
     elif side_menu_idx == 4:
-        st_title("Информация о проекте")
+        st_title("Информация о команде")
         st_team()
 
 
