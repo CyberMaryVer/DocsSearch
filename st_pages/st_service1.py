@@ -148,42 +148,46 @@ def st_serious_search():
                                   embeddings_distilbert_long=embeddings_distilbert_long,
                                   tfidf_vectorizer=tfidf_vectorizer,
                                   tfidf_lemmatizer=lemmatizer)
-        st.write(f"**Индексы ngrams**: {idxs}")
-        searches = np.array(converted_reestr)[idxs]
-        st.write(f"**Ngrams**: {searches}")
-        all_indexes = []
-        if searches.size > 0:
-            st.markdown(f"*Поиск по ближайшим ngrams: {searches}*")
-            for s in searches:
-                # print(s)
-                st.markdown(f"----")
-                st.markdown(f"---- ngram: {s} ----")
-                st.markdown("#### Ближайшие объекты:")
 
-                res = get_projects(project_reestr, "project_desc", s, 64)
-                res_indexes1 = list(res.head(4).index)
-                vect = model.encode([s])
-                similar_indexes = find_similar(vect, embeddings_distilbert_long)
-                similar_data = project_reestr.iloc[similar_indexes].sort_values(by=['status'])
-                st.dataframe(similar_data)
-                res_indexes2 = list(similar_data.index)
+        if idxs is None:
+            st.text("[Запрос слишком короткий - воспользуйтесь быстрым поиском]")
+        else:
+            st.write(f"**Индексы ngrams**: {idxs}")
+            searches = np.array(converted_reestr)[idxs]
+            st.write(f"**Ngrams**: {searches}")
+            all_indexes = []
+            if searches.size > 0:
+                st.markdown(f"*Поиск по ближайшим ngrams: {searches}*")
+                for s in searches:
+                    # print(s)
+                    st.markdown(f"----")
+                    st.markdown(f"---- ngram: {s} ----")
+                    st.markdown("#### Ближайшие объекты:")
 
-                for val in set(project_reestr.iloc[similar_indexes].project_desc.values.tolist()):
-                    st.code(val)
-                    st.markdown(format_text(val, s, color=(119, 189, 239)), unsafe_allow_html=True)
+                    res = get_projects(project_reestr, "project_desc", s, 64)
+                    res_indexes1 = list(res.head(4).index)
+                    vect = model.encode([s])
+                    similar_indexes = find_similar(vect, embeddings_distilbert_long)
+                    similar_data = project_reestr.iloc[similar_indexes].sort_values(by=['status'])
+                    st.dataframe(similar_data)
+                    res_indexes2 = list(similar_data.index)
 
-                if res is not None and res.shape[0] >= 1:
-                    st.dataframe(res.head(4).sort_values(by=['status']))
-                    for val in set(res.project_desc.values.tolist()[:4]):
+                    for val in set(project_reestr.iloc[similar_indexes].project_desc.values.tolist()):
                         st.code(val)
                         st.markdown(format_text(val, s, color=(119, 189, 239)), unsafe_allow_html=True)
 
-                for idxs in [res_indexes1, res_indexes2]:
-                    for idx in idxs:
-                        if idx not in all_indexes:
-                            all_indexes.append(idx)
+                    if res is not None and res.shape[0] >= 1:
+                        st.dataframe(res.head(4).sort_values(by=['status']))
+                        for val in set(res.project_desc.values.tolist()[:4]):
+                            st.code(val)
+                            st.markdown(format_text(val, s, color=(119, 189, 239)), unsafe_allow_html=True)
 
-            print(all_indexes)
-            st.sidebar.text("Результаты поиска")
-            st.sidebar.dataframe(project_reestr[project_reestr.index.isin(all_indexes)].sort_values(by=['status'],
-                                                                                                    ascending=False))
+                    for idxs in [res_indexes1, res_indexes2]:
+                        for idx in idxs:
+                            if idx not in all_indexes:
+                                all_indexes.append(idx)
+
+                print(all_indexes)
+                st.sidebar.text("Результаты поиска")
+                st.sidebar.dataframe(project_reestr[project_reestr.index.isin(all_indexes)].sort_values(by=['status'],
+                                                                                                        ascending=False))

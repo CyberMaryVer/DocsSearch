@@ -5,6 +5,8 @@ from st_pages.st_service2 import service2
 from st_pages.st_service1 import st_serious_search
 from st_pages.st_analysis import st_load_docx
 from st_pages.get_embeddings import get_them_all
+from st_pages.st_request import st_load_docx_and_analyze
+from st_pages.st_team import st_team
 
 # set page settings
 try:
@@ -23,6 +25,7 @@ def main():
         "Анализ документа",
         "Векторный поиск - демо",
         "Быстрый поиск - демо",
+        "Векторный поиск по заявке",
         "Информация о проекте"
     ]
 
@@ -44,8 +47,12 @@ def main():
         service2()
 
     elif side_menu_idx == 3:
+        st_title("Векторный поиск по заявке")
+        st_load_docx_and_analyze()
+
+    elif side_menu_idx == 4:
         st_title("Информация о проекте")
-        pass
+        st_team()
 
 
 if __name__ == "__main__":
