@@ -30,6 +30,7 @@ def service2():
         data = project_reestr
         col = "project_name"
 
+    is_show = st.sidebar.checkbox("Сразу отображать результат")
     autocomplete = get_autocomplete(df=data, column=col)
     st.markdown("## Демонстрация функционала быстрого поиска")
     user_input = st.text_input("Введите неполный запрос:")
@@ -38,7 +39,19 @@ def service2():
     for s in user_output:
         st.write(f"* {s}")
 
+    placeholder = st.empty()
+    df_res = pd.DataFrame()
+
     if len(user_output) > 0:
+        if is_show:
+            for output_string in user_output:
+                res_ = get_projects(data, col, output_string, thresh=72)
+                df_res = pd.concat((df_res, res_))
+            with placeholder:
+                df_res = df_res.sort_values(by=['status'], ascending=False) \
+                    if ac_choice == "Проекты в базе" else df_res
+                st.dataframe(df_res)
+
         user_choice = st.selectbox("Выбор результата", user_output)
         res = get_projects(data, col, user_choice, thresh=72)
 
