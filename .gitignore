@@ -7,3 +7,4 @@
 /.idea/
 /tmp.docx
 /wc.png
+/.streamlit/secrets.toml

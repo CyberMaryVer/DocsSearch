@@ -27,7 +27,7 @@ def main():
         "Быстрый поиск - демо",
         "Умный поиск - демо",
         "Анализ документа - демо",
-        "Векторный поиск по заявке",
+        # "Векторный поиск по заявке",
         "Информация о команде"
     ]
 
@@ -52,11 +52,11 @@ def main():
         st_title("Семантический анализ документа")
         st_load_docx()
 
-    elif side_menu_idx == 4:
-        st_title("Векторный поиск по заявке")
-        st_load_docx_and_analyze()
+    # elif side_menu_idx == 4:
+    #     st_title("Векторный поиск по заявке")
+    #     st_load_docx_and_analyze()
 
-    elif side_menu_idx == 5:
+    elif side_menu_idx == 4:
         st_title("Информация о команде")
         st_team()
 
