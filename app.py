@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit import StreamlitAPIException
 from st_pages.st_utils import st_img, st_title
-from st_pages.st_fast_search import service2
+from st_pages.st_fast_search import fast_search
 from st_pages.st_smart_search import st_serious_search
 from st_pages.st_analysis import st_load_docx
 from st_pages.get_embeddings import get_them_all
@@ -42,7 +42,7 @@ def main():
 
     elif side_menu_idx == 1:
         st_title("Быстрый поиск - демо")
-        service2()
+        fast_search()
 
     elif side_menu_idx == 2:
         st_title("Умный поиск - демо")

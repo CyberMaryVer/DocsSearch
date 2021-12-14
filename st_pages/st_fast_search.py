@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 from fast_autocomplete import AutoComplete
-from st_pages.nlp import bigram_trigram, convert_ngrams, get_searches, get_projects, show_project
+from st_pages.nlp import bigram_trigram, convert_ngrams, get_searches, get_projects, show_project, remove_stops
 from st_pages.dataframes import get_dataframes
 from st_pages.st_utils import save_logs
 
@@ -21,7 +21,7 @@ def get_autocomplete(df, columns):
     return autocomplete
 
 
-def service2():
+def fast_search():
     with st.form("Настройки быстрого поиска"):
         ac_choice = st.radio("Выберите данные для обработки", ("Открытые запросы", "Проекты в базе"))
         st.form_submit_button("Submit")
@@ -69,7 +69,8 @@ def service2():
         st.markdown("----")
         st.dataframe(res)
 
-        for col in columns[:1]:
-            # st.markdown(format_text(res[col].values[0], user_choice, color=(119, 189, 239)), unsafe_allow_html=True)
-            for val in res[col].values:
-                show_project(user_input, user_choice, val, data, col)
+        for val in res[columns[-1]].values:
+            # highlighted = " ".join([w.lower() for w in user_input.split() if len(w) > 3])
+            highlighted = remove_stops(user_input)
+            show_project(highlighted, user_choice, val, data, col=columns[-1], name_col=columns[0],
+                         color=(242, 252, 242), second_color=(242, 242, 252))

@@ -10,7 +10,7 @@ def format_red_text(text, url=""):
                 f'1; border-radius: 0.35em;">{text}</span>'''
 
 
-def entity_info(text, eob, color=(246, 41, 34), contour=(186, 0, 0)):
+def entity_info(text, eob, color=(242, 242, 242), contour=(183, 183, 183)):
     ent_info = f'''<b style="font-size:8px">    {eob}</b>''' if eob else ""
     return f'''<span style="background: rgb{color}; padding: 0.2em 0.2em; margin: 0px 0.25em; line-height: '
                 f'1; border-radius: 0.35em; border: 2px solid rgb{contour};">{text}{ent_info}</span>'''
@@ -27,7 +27,7 @@ def text2tokens(text, ents):
         elif token.tag_ == "PRP" or token.pos == "NUM":
             html += space + entity_info(token.text, False, color=(167, 234, 12))
         elif token.ent_type_ == "PER":
-            html += space + entity_info(token.text, False, color=(24, 126, 61), contour=(0, 255, 0))
+            html += space + entity_info(token.text, False, color=(124, 226, 161), contour=(0, 255, 0))
         elif token.ent_type_ in ents:
             html += space + entity_info(token.text, False)
         elif token.pos == "PUNCT":

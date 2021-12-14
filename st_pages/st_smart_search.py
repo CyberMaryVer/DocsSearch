@@ -6,7 +6,7 @@ import streamlit as st
 from nltk.stem import WordNetLemmatizer
 
 from st_pages.dataframes import get_dataframes
-from st_pages.nlp import get_projects, preprocess_raw, show_project
+from st_pages.nlp import get_projects, preprocess_raw, show_project, remove_stops
 from st_pages.search_engine import find_indexes_in_converted_reestr, update_indexes, \
     get_bert, get_embeddings, get_df_by_indexes, find_projects_by_request, find_sentence_idxs, find_similar
 from st_pages.wordcloud import create_ngrams
@@ -21,13 +21,6 @@ BERT_EMBEDDINGS = "./../data/embeddings.pk" if __name__ == "__main__" else "./da
 LONG_BERT_EMBEDDINGS = "./../data/lembeddings.pk" if __name__ == "__main__" else "./data/lembeddings.pk"
 TFDF_EMBEDDINGS = "./../data/tfidf.pk" if __name__ == "__main__" else "./data/tfidf.pk"
 TFDF_VECTORIZER = "./../data/tfidf_vectorizer.pk" if __name__ == "__main__" else "./data/tfidf_vectorizer.pk"
-
-
-def remove_stops(s: str):
-    stops = ["и", "в", "на", "о", "т", "д", "об", "с", "со", "а", "др", "тд", "разработка", "предназначена"]
-    sl = [w for w in s.split() if w not in stops]
-    s = ' '.join(sl)
-    return s
 
 
 def st_serious_search():
@@ -46,7 +39,7 @@ def st_serious_search():
     st.markdown("## Демонстрация функционала умного поиска")
     user_input = st.text_input("Введите запрос:",
                                value="Беспилотное управление локомотивом с применением технологий машинного зрения")
-    lev_distance = st.number_input("Расстояние Левенштейна", min_value=50, max_value=99, step=1, value=64)
+    lev_distance = st.number_input("Расстояние Левенштейна", min_value=50, max_value=99, step=1, value=72)
     approach = "tfidf"  # st.selectbox("Выберите модель", ("tfidf",))
 
     if True:

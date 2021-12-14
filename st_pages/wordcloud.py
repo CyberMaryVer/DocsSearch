@@ -108,4 +108,5 @@ def st_wordcloud(text, stop_words):
     doc_ngrams = create_ngrams(flat_list, 4)
     doc_words = extract_words(doc_ngrams)
     cloud = dict(frequent_words(doc_words, number_top_words=100))
-    make_word_cloud(cloud, colormap="Greens", background_color="#F0F2F6", filename="wc.png", circle=True, dw=300)
+    make_word_cloud(cloud, colormap="gist_heat", background_color="#F0F2F6",
+                    filename="wc.png", circle=True, dw=300)

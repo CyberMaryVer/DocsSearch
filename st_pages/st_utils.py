@@ -7,9 +7,10 @@ from datetime import datetime
 import qrcode
 
 
-def st_title(title_text, color=(138, 139, 148)):
-    st.markdown(f"""<p style="background: rgb{color}; padding: 1.55em 1.55em; margin: 0px 0.0em; line-height: '
-                    f'1; border-radius: 0.25em;"><b>{title_text.upper()}</b></p>""", unsafe_allow_html=True)
+def st_title(title_text, color=(105, 105, 105)):
+    st.markdown(f"""<p style="color: rgb(255, 255, 255); background: rgb{color}; padding: 1.55em 1.55em; 
+                    margin: 0px 0.0em; line-height:1; border-radius: 0.25em;"><b>{title_text.upper()}</b></p>""",
+                unsafe_allow_html=True)
     st.markdown("----")
 
 

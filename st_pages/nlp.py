@@ -138,6 +138,14 @@ def preprocess_raw(raw_str, lemmatize=True):
     return new_raw
 
 
+def remove_stops(s: str):
+    stops = ["и", "в", "на", "о", "т", "д", "об", "с", "со", "а", "др", "тд", "из-за",
+             "разработка", "предназначена"]
+    sl = [w.lower() for w in s.split() if w.lower() not in stops]
+    s = ' '.join(sl)
+    return s
+
+
 def fuzz_search(x, search, thresh=64, lemmatize=True):
     if lemmatize:
         x = preprocess_raw(x)
@@ -174,27 +182,39 @@ def get_projects(df, columns, search, thresh):
     return
 
 
-def format_text(text, search, color=(204, 34, 34)):
+def format_text(text, main_input, second_input=None, color=(242, 99, 99), second_color=(242, 99, 99)):
     formatted = []
     text = text if type(text) is str else ""
-    for word in text.split():
-        if len(word) > 3 and preprocess_str(word) in search:
+    lem_text = [preprocess_raw(w) for w in text.split()]
+    second_input = preprocess_raw(second_input) if second_input is not None else None
+    main_input = preprocess_raw(main_input)
+
+    for word, lemma in zip(text.split(), lem_text):
+        if len(word) > 3 and lemma in main_input:
             word = f'''<span style="background: rgb{color}; padding: 0.4em 0.4em; margin: 0px 0.06em; line-height: '
                 f'1; border-radius: 0.35em;">{word}</span>'''
-        elif len(word) > 1 and preprocess_str(word) in search:
-            word = f'''<span style="background: rgb(242, 242, 242); padding: 0.4em 0.4em; margin: 0px 0.06em; 
+        elif len(word) > 3 and second_input is not None and lemma in second_input:
+            word = f'''<span style="background: rgb{second_color}; padding: 0.4em 0.4em; margin: 0px 0.06em; 
+                        line-height:1; border-radius: 0.35em;">{word}</span>'''
+        elif (len(word) > 1 and lemma in main_input) or \
+                (len(word) > 1 and second_input is not None and lemma in second_input):
+            word = f'''<span style="background: rgb(255, 255, 255); padding: 0.4em 0.4em; margin: 0px 0.06em; 
             line-height:1; border-radius: 0.35em;">{word}</span>'''
+
         formatted.append(word)
     res_text = " ".join(formatted)
     return res_text
 
 
 def show_project(user_input, search, val, df, col, name_col=None,
-                 color=(242, 205, 205), second_color=(242, 205, 205)):
+                 color=(242, 99, 99), second_color=(242, 185, 185)):
     name_col = col if name_col is None else name_col
     project_name = df.loc[df[col] == val][name_col].to_list()
     if len(project_name) > 0:
         st.code(project_name)
-        html = format_text(val, user_input, color=second_color)
-        html = format_text(html, search, color=color)
+        # st.code(user_input)
+        html = format_text(val, search, user_input, color=color, second_color=second_color)
         st.markdown(html, unsafe_allow_html=True)
+        # st.code(search)
+        # html = format_text(html, search, color=color)
+        # st.markdown(html, unsafe_allow_html=True)
