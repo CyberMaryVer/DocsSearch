@@ -8,9 +8,9 @@ def st_team():
     col1, col2 = st.columns([3, 2])
     with col1:
         st.info("Мария - NLP инженер")
-        st.info("Алина - дизайнер")
+        st.info("Алина - UX/UI дизайнер")
         st.info("Максим - дата-аналитик")
-        st.info("Павел - дата-аналитик")
+        st.info("Павел - WEB дизайнер")
     with col2:
         # st_img("./data/tg.png")
         st.markdown(f""":woman: [Мария](https://t.me/cybermary)""",
