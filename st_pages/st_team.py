@@ -3,7 +3,7 @@ from st_pages.st_utils import st_img
 
 
 def st_team():
-    st.title("Team")
+    st.title("Undefined Variable")
     st_img("./images/team.png", width=800)
     col1, col2 = st.columns([3, 2])
     with col1:

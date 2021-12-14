@@ -6,13 +6,12 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.stem import SnowballStemmer
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
-from spacy import displacy
 nltk.download('stopwords')
 from docx import Document
 import spacy
 
 from st_pages.wordcloud import st_wordcloud
-from st_pages.st_utils import st_img
+from st_pages.st_utils import st_img, save_logs
 
 nlp = spacy.load('ru_core_news_md')
 stop_words = stopwords.words('russian')
@@ -54,12 +53,13 @@ def st_load_docx():
     doc_file = st.file_uploader("Загрузите документ для анализа", type=["docx"])
 
     if doc_file is not None:
+        save_logs(doc_file.name)
         content = doc_file.read()
         with open("tmp.docx", "wb+") as writer:
             writer.write(content)
         doc = Document("tmp.docx")
         st.write(type(doc))
-        table, text = tables_2d_frame(doc), parag_2d_text(doc, lemmatize=False)
+        # table, text = tables_2d_frame(doc), parag_2d_text(doc, lemmatize=False)
         requirements_txt = []
         requirements_raw = []
 
@@ -79,7 +79,3 @@ def st_load_docx():
 
         st.sidebar.text("Требования")
         st.sidebar.write(requirements_raw)
-
-    # test_doc = "test.docx"
-    # document = Document(test_doc)
-    # table, text = tables_2d_frame(document), parag_2d_text(document, lemmatize=False)

@@ -15,34 +15,13 @@ from st_pages.st_utils import save_logs
 
 nltk.download('punkt')
 nltk.download('wordnet')
-# Number of top
+
 K = 5
 CONVERTED_REESTR = "./../data/converted_reestr.pk" if __name__ == "__main__" else "./data/converted_reestr.pk"
 BERT_EMBEDDINGS = "./../data/embeddings.pk" if __name__ == "__main__" else "./data/embeddings.pk"
 LONG_BERT_EMBEDDINGS = "./../data/lembeddings.pk" if __name__ == "__main__" else "./data/lembeddings.pk"
 TFDF_EMBEDDINGS = "./../data/tfidf.pk" if __name__ == "__main__" else "./data/tfidf.pk"
 TFDF_VECTORIZER = "./../data/tfidf_vectorizer.pk" if __name__ == "__main__" else "./data/tfidf_vectorizer.pk"
-
-
-# def get_long_embeddings(data, model):
-#     def clean(s):
-#         return str(s).lower().strip().replace("(", "").replace(")", "").replace("/", "")
-#
-#     embeddings_long = model.encode([clean(x) for x in data])
-#     import pickle as pk
-#
-#     file_path = "lembeddings.pk"
-#     with open(file_path, 'ab+') as fp:
-#         pk.dump(embeddings_long, fp)
-#     return embeddings_long
-
-# def show_project(user_input, search, val, df, col,
-#                  color=(242, 205, 205), second_color=(242, 205, 205)):
-#     project_name = df.loc[df[col] == val][col].to_list()
-#     st.code(project_name)
-#     html = format_text(val, user_input, color=second_color)
-#     html = format_text(html, search, color=color)
-#     st.markdown(html, unsafe_allow_html=True)
 
 
 def st_serious_search():
