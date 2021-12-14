@@ -7,7 +7,7 @@ from nltk.stem import WordNetLemmatizer
 from sentence_transformers import SentenceTransformer
 
 from st_pages.dataframes import get_dataframes
-from st_pages.nlp import get_projects, format_text
+from st_pages.nlp import get_projects, format_text, show_project
 from st_pages.search_engine import find_indexes_in_converted_reestr, update_indexes, \
     get_bert, get_embeddings, get_df_by_indexes, find_projects_by_request, find_sentence_idxs, find_similar
 from st_pages.wordcloud import create_ngrams
@@ -35,13 +35,13 @@ TFDF_VECTORIZER = "./../data/tfidf_vectorizer.pk" if __name__ == "__main__" else
 #         pk.dump(embeddings_long, fp)
 #     return embeddings_long
 
-def show_project(user_input, search, val, df, col,
-                 color=(242, 205, 205), second_color=(242, 205, 205)):
-    project_name = df.loc[df[col] == val][col].to_list()
-    st.code(project_name)
-    html = format_text(val, user_input, color=second_color)
-    html = format_text(html, search, color=color)
-    st.markdown(html, unsafe_allow_html=True)
+# def show_project(user_input, search, val, df, col,
+#                  color=(242, 205, 205), second_color=(242, 205, 205)):
+#     project_name = df.loc[df[col] == val][col].to_list()
+#     st.code(project_name)
+#     html = format_text(val, user_input, color=second_color)
+#     html = format_text(html, search, color=color)
+#     st.markdown(html, unsafe_allow_html=True)
 
 
 def st_serious_search():

@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 from fast_autocomplete import AutoComplete
-from st_pages.nlp import bigram_trigram, convert_ngrams, get_searches, get_projects, format_text
+from st_pages.nlp import bigram_trigram, convert_ngrams, get_searches, get_projects, format_text, show_project
 from st_pages.dataframes import get_dataframes
 
 VALID_CHARS = "абвгдеёжзиклмнопрстуфхцчщшьыъэюяabcdefghijklmnopqrstuvwxyz"
@@ -28,15 +28,15 @@ def service2():
     if ac_choice == "Открытые запросы":
         data = rzd_requests
         columns = ["topic",]
-        col = "topic"
     else:
         data = project_reestr
         columns = ["project_name", "project_desc"]
-        col = "project_name"
 
-    is_show = st.sidebar.checkbox("Сразу отображать результат")
+    is_show = st.sidebar.checkbox("Отображать необработанные результаты")
     autocomplete = get_autocomplete(df=data, columns=columns)
     st.markdown("## Демонстрация функционала быстрого поиска")
+    st.markdown("----")
+    st.markdown("** *Введите неполный запрос и нажмите на Enter, чтобы увидеть список подсказок:* **")
     user_input = st.text_input("Введите неполный запрос:")
 
     user_output = get_searches(user_input, autocomplete=autocomplete)
@@ -58,10 +58,15 @@ def service2():
                     if ac_choice == "Проекты в базе" else df_res
                 st.dataframe(df_res)
 
+        st.markdown("----")
+        st.markdown("** *Пример выдачи при выборе результата из подсказок: * **")
         user_choice = st.selectbox("Выбор результата", user_output)
         res = get_projects(data, columns, user_choice, thresh=72)
 
+        st.markdown("----")
         st.dataframe(res)
 
-        for col in columns:
-            st.markdown(format_text(res[col].values[0], user_choice, color=(119, 189, 239)), unsafe_allow_html=True)
+        for col in columns[:1]:
+            # st.markdown(format_text(res[col].values[0], user_choice, color=(119, 189, 239)), unsafe_allow_html=True)
+            for val in res[col].values:
+                show_project(user_input, user_choice, val, data, col)
