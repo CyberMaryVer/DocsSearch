@@ -1,12 +1,20 @@
 import pandas as pd
 import streamlit as st
-import nltk
-from fast_autocomplete import AutoComplete
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+import nltk
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.stem import SnowballStemmer
+from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
+from st_pages.vis_prompt import SysColors
 
+nltk.download('stopwords')
 nltk.download('punkt')
 
+stop_words = stopwords.words('russian')
+stem = SnowballStemmer('russian')
+punc = RegexpTokenizer(r'\w+')
 
 def get_words(df, column_name):
     words = {}
@@ -72,7 +80,7 @@ def get_nfreqs(corpus, n=4):
 
 
 def join_freqs(freqs):
-    txt = [[y.lower() for y in x[0]] for x in freqs]
+    txt = [[y.lower() for y in x[0] if len(y) > 1] for x in freqs]
     txt = [" ".join(x) for x in txt]
     return txt
 
@@ -122,7 +130,18 @@ def preprocess_str(raw_str):
     return res
 
 
-def fuzz_search(x, search, thresh=57):
+def preprocess_raw(raw_str, lemmatize=True):
+    curr_raw = word_tokenize(raw_str, 'russian')
+    if not lemmatize:
+        return curr_raw
+    new_raw = " ".join([stem.stem(i) for i in curr_raw if i not in stop_words and i.isalpha()])
+    return new_raw
+
+
+def fuzz_search(x, search, thresh=64, lemmatize=True):
+    if lemmatize:
+        x = preprocess_raw(x)
+        search = preprocess_raw(search)
     if fuzz.partial_ratio(x, search) > thresh:
         return True
     return False
@@ -131,13 +150,25 @@ def fuzz_search(x, search, thresh=57):
 def get_projects(df, columns, search, thresh):
     try:
         all_res = pd.DataFrame()
+
         for col in columns:
+            # search for exact match
             res = df.loc[df[col].apply(lambda x: search in preprocess_str(str(x)))]
-            if res.shape[0] == 0:
-                res = df.loc[df[col].apply(lambda x: fuzz_search(preprocess_str(str(x)), search, thresh))]
+
+            if not res.shape[0] == 0:
+                all_res = pd.concat((all_res, res))
+            else:
+                print(SysColors.WARNING, "NO EXACT MATCHES", SysColors.RESET)
+
+            # search for Levenshtein closest match
+            res = df.loc[df[col].apply(lambda x: fuzz_search(preprocess_str(str(x)), search, thresh, True))]
+
             all_res = pd.concat((all_res, res))
+
+        # filter only unique results
         all_res.drop_duplicates(subset=columns, inplace=True, keep='last')
         return all_res
+
     except Exception as e:
         print(f"{e}")
     return
@@ -147,9 +178,12 @@ def format_text(text, search, color=(204, 34, 34)):
     formatted = []
     text = text if type(text) is str else ""
     for word in text.split():
-        if len(word) > 2 and preprocess_str(word) in search:
+        if len(word) > 3 and preprocess_str(word) in search:
             word = f'''<span style="background: rgb{color}; padding: 0.4em 0.4em; margin: 0px 0.06em; line-height: '
                 f'1; border-radius: 0.35em;">{word}</span>'''
+        elif len(word) > 1 and preprocess_str(word) in search:
+            word = f'''<span style="background: rgb(242, 242, 242); padding: 0.4em 0.4em; margin: 0px 0.06em; 
+            line-height:1; border-radius: 0.35em;">{word}</span>'''
         formatted.append(word)
     res_text = " ".join(formatted)
     return res_text
@@ -159,7 +193,8 @@ def show_project(user_input, search, val, df, col, name_col=None,
                  color=(242, 205, 205), second_color=(242, 205, 205)):
     name_col = col if name_col is None else name_col
     project_name = df.loc[df[col] == val][name_col].to_list()
-    st.code(project_name)
-    html = format_text(val, user_input, color=second_color)
-    html = format_text(html, search, color=color)
-    st.markdown(html, unsafe_allow_html=True)
+    if len(project_name) > 0:
+        st.code(project_name)
+        html = format_text(val, user_input, color=second_color)
+        html = format_text(html, search, color=color)
+        st.markdown(html, unsafe_allow_html=True)

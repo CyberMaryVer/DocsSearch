@@ -137,7 +137,7 @@ def find_projects_by_request(search_request):
     all_indexes = []
     if searches.size > 0:
         for s in searches:
-            res = get_projects(project_reestr, ["project_desc"], s, 64)
+            res = get_projects(project_reestr, ["project_desc"], s, 72)
             res_indexes1 = list(res.head(4).index) if res is not None else []
             vect = model.encode([s])
             similar_indexes = find_similar(vect, embeddings_long)
@@ -164,7 +164,7 @@ def find_sentence_idxs(sent,
                        tfidf_lemmatizer,
                        ):
     res = []
-    for i in [9, 8, 7, 6, 5, 4, 3]:
+    for i in [9, 8, 7, 6, 5, 4, 3, 2]:
         idxs = []
         try:
             n_freqs = get_nfreqs([sent], n=i)
