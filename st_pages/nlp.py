@@ -155,9 +155,10 @@ def format_text(text, search, color=(204, 34, 34)):
     return res_text
 
 
-def show_project(user_input, search, val, df, col,
+def show_project(user_input, search, val, df, col, name_col=None,
                  color=(242, 205, 205), second_color=(242, 205, 205)):
-    project_name = df.loc[df[col] == val][col].to_list()
+    name_col = col if name_col is None else name_col
+    project_name = df.loc[df[col] == val][name_col].to_list()
     st.code(project_name)
     html = format_text(val, user_input, color=second_color)
     html = format_text(html, search, color=color)

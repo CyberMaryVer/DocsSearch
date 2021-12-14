@@ -102,14 +102,16 @@ def st_serious_search():
 
                         st.markdown("**Похожий проект**")
                         for val in set(project_reestr.iloc[similar_indexes].project_desc.values.tolist()):
-                            show_project(user_input, s, val, project_reestr, "project_name")
+                            show_project(user_input, s, val, project_reestr, col="project_desc",
+                                         name_col="project_name")
 
                         if res is not None and res.shape[0] >= 1:
                             st.write("----")
                             st.markdown("**Еще похожие проекты**")
                             # st.dataframe(res.head(4).sort_values(by=['status']))
                             for val in set(res.project_desc.values.tolist()[:4]):
-                                show_project(user_input, s, val, project_reestr, "project_name")
+                                show_project(user_input, s, val, project_reestr, col="project_desc",
+                                         name_col="project_name")
 
                         for idxs in [res_indexes1, res_indexes2]:
                             for idx in idxs:
