@@ -11,6 +11,7 @@ from st_pages.nlp import get_projects, format_text, show_project
 from st_pages.search_engine import find_indexes_in_converted_reestr, update_indexes, \
     get_bert, get_embeddings, get_df_by_indexes, find_projects_by_request, find_sentence_idxs, find_similar
 from st_pages.wordcloud import create_ngrams
+from st_pages.st_utils import save_logs
 
 nltk.download('punkt')
 nltk.download('wordnet')
@@ -64,6 +65,7 @@ def st_serious_search():
     approach = "tfidf"  # st.selectbox("Выберите модель", ("tfidf",))
 
     if True:
+        save_logs(f"SMART SEARCH: {user_input}")
         st.markdown("----")
         st.write(f"### Результат:")
         idxs = find_sentence_idxs(user_input,

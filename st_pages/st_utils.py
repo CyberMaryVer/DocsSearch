@@ -3,7 +3,7 @@ import pandas as pd
 import base64
 from PIL import Image
 import streamlit.components.v1 as components
-import json
+from datetime import datetime
 import qrcode
 
 
@@ -99,6 +99,12 @@ def color_text(text, color=(226, 26, 26)):
 def load_df(df_path):
     df = pd.read_csv(df_path, index_col=0)
     return df
+
+
+def save_logs(txt):
+    with open("log.txt", "a", encoding="utf-8") as f:
+        datetoday = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        f.write(f"{txt} - {datetoday};\n")
 
 
 if __name__ == "__main__":

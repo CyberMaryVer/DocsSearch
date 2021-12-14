@@ -21,3 +21,17 @@ def st_team():
                     unsafe_allow_html=True)
         st.markdown(f""":man: [Павел](https://t.me/pavel_grom_gq)""",
                     unsafe_allow_html=True)
+        with st.form:
+            login = st.text_input("Login")
+            password = st.text_input("Password")
+            submit = st.form_submit_button("Submit")
+
+        if submit:
+            is_login = login == st.secrets["USER"]
+            is_password = password == st.secrets["PASSWORD"]
+            if is_password and is_login:
+                with open("log.txt", "r") as reader:
+                    logs = reader.read()
+                st.write(logs)
+
+
