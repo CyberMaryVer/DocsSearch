@@ -4,7 +4,7 @@ from st_pages.st_utils import st_img
 
 def st_team():
     st.title("Undefined Variable")
-    st_img("./images/team.png", width=800)
+    st_img("./images/team.png", width=600)
     col1, col2 = st.columns([3, 2])
     with col1:
         st.info("Мария - NLP инженер")
@@ -23,18 +23,21 @@ def st_team():
                     unsafe_allow_html=True)
 
     st.markdown("----")
-    with st.form("Admin mode"):
-        login = st.text_input("Login")
-        password = st.text_input("Password")
-        submit = st.form_submit_button("Submit")
 
-    if submit:
-        is_login = login == st.secrets["USER"]
-        is_password = password == st.secrets["PASSWORD"]
-        if is_password and is_login:
-            with open("log.txt", "r") as reader:
-                logs = reader.readlines()
-            for log in logs:
-                st.text(log)
+    col1, col2 = st.columns([3, 2])
+    with col1:
+        with st.form("Admin mode"):
+            login = st.text_input("Login")
+            password = st.text_input("Password")
+            submit = st.form_submit_button("Submit")
+
+        if submit:
+            is_login = login == st.secrets["USER"]
+            is_password = password == st.secrets["PASSWORD"]
+            if is_password and is_login:
+                with open("log.txt", "r", encoding="utf-8") as reader:
+                    logs = reader.readlines()
+                for log in logs:
+                    st.text(log)
 
 
