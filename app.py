@@ -11,9 +11,9 @@ from st_pages.st_team import st_team
 
 # set page settings
 try:
-    st.set_page_config(page_title="web-app", page_icon=":bar_chart:", layout="wide",
+    st.set_page_config(page_title="web-app", page_icon=":mag_right:", layout="wide",
                        menu_items={
-                           'Get Help': 'https://www.rferl.org/a/kamchatka-volcanoes-ballistic-missile/31358301.html',
+                           'Get Help': 'https://medium.muz.li/designing-search-for-your-product-758c97a64fc8',
                            'About': "### Undefined Variable\n----\nNLP Jazz"
                        })
 except StreamlitAPIException as e:
