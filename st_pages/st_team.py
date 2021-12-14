@@ -21,7 +21,7 @@ def st_team():
                     unsafe_allow_html=True)
         st.markdown(f""":man: [Павел](https://t.me/pavel_grom_gq)""",
                     unsafe_allow_html=True)
-        with st.form:
+        with st.form():
             login = st.text_input("Login")
             password = st.text_input("Password")
             submit = st.form_submit_button("Submit")
