@@ -86,7 +86,7 @@ def create_qrcode(url, out_file="qr.png", box_size=6, border=4):
 
 
 def format_text(text, color=(226, 26, 26)):
-    return f'''<span style="background: rgb{color}; padding: 0.45em 0.6em; margin: 0px 0.25em; line-height:1; 
+    return f'''<span style="background: rgb{color}; padding: 0.4em 0.4em; margin: 0px 0.25em; line-height:1; 
                 border-radius: 0.15em;">{text}</span>'''
 
 

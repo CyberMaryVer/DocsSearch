@@ -71,6 +71,12 @@ def get_nfreqs(corpus, n=4):
     return freqs
 
 
+def join_freqs(freqs):
+    txt = [[y.lower() for y in x[0]] for x in freqs]
+    txt = [" ".join(x) for x in txt]
+    return txt
+
+
 def bigram_trigram(df, column):
     corpus = get_corpus(df, column)
 
@@ -122,12 +128,16 @@ def fuzz_search(x, search, thresh=57):
     return False
 
 
-def get_projects(df, column, search, thresh):
+def get_projects(df, columns, search, thresh):
     try:
-        res = df.loc[df[column].apply(lambda x: search in preprocess_str(str(x)))]
-        if res.shape[0] == 0:
-            res = df.loc[df[column].apply(lambda x: fuzz_search(preprocess_str(str(x)), search, thresh))]
-        return res
+        all_res = pd.DataFrame()
+        for col in columns:
+            res = df.loc[df[col].apply(lambda x: search in preprocess_str(str(x)))]
+            if res.shape[0] == 0:
+                res = df.loc[df[col].apply(lambda x: fuzz_search(preprocess_str(str(x)), search, thresh))]
+            all_res = pd.concat((all_res, res))
+        all_res.drop_duplicates(subset=columns, inplace=True, keep='last')
+        return all_res
     except Exception as e:
         print(f"{e}")
     return
@@ -135,9 +145,10 @@ def get_projects(df, column, search, thresh):
 
 def format_text(text, search, color=(204, 34, 34)):
     formatted = []
+    text = text if type(text) is str else ""
     for word in text.split():
-        if preprocess_str(word) in search:
-            word = f'''<span style="background: rgb{color}; padding: 0.45em 0.6em; margin: 0px 0.25em; line-height: '
+        if len(word) > 2 and preprocess_str(word) in search:
+            word = f'''<span style="background: rgb{color}; padding: 0.4em 0.4em; margin: 0px 0.06em; line-height: '
                 f'1; border-radius: 0.35em;">{word}</span>'''
         formatted.append(word)
     res_text = " ".join(formatted)

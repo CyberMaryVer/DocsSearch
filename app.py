@@ -1,11 +1,12 @@
 import streamlit as st
 from streamlit import StreamlitAPIException
 from st_pages.st_utils import st_img, st_title
-from st_pages.st_service2 import service2
-from st_pages.st_service1 import st_serious_search
+from st_pages.st_fast_search import service2
+from st_pages.st_smart_search import st_serious_search
 from st_pages.st_analysis import st_load_docx
 from st_pages.get_embeddings import get_them_all
 from st_pages.st_request import st_load_docx_and_analyze
+from st_pages.st_description import st_description
 from st_pages.st_team import st_team
 
 # set page settings
@@ -22,9 +23,10 @@ except StreamlitAPIException as e:
 
 def main():
     side_menu_list = [
-        "Анализ документа",
-        "Векторный поиск - демо",
+        "Описание алгоритма",
         "Быстрый поиск - демо",
+        "Умный поиск - демо",
+        "Анализ документа - демо",
         "Векторный поиск по заявке",
         "Информация о команде"
     ]
@@ -35,22 +37,26 @@ def main():
 
     # username = st.session_state["username"]
     if side_menu_idx == 0:
-        st_title("Семантический анализ документа")
-        st_load_docx()
+        st_title("Описание алгоритма")
+        st_description()
 
     elif side_menu_idx == 1:
-        st_title("Векторный поиск - демо")
-        st_serious_search()
-
-    elif side_menu_idx == 2:
         st_title("Быстрый поиск - демо")
         service2()
 
+    elif side_menu_idx == 2:
+        st_title("Умный поиск - демо")
+        st_serious_search()
+
     elif side_menu_idx == 3:
+        st_title("Семантический анализ документа")
+        st_load_docx()
+
+    elif side_menu_idx == 4:
         st_title("Векторный поиск по заявке")
         st_load_docx_and_analyze()
 
-    elif side_menu_idx == 4:
+    elif side_menu_idx == 5:
         st_title("Информация о команде")
         st_team()
 

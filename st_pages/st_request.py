@@ -2,8 +2,8 @@ import streamlit as st
 import numpy as np
 from nltk.stem import WordNetLemmatizer
 from st_pages.wordcloud import create_ngrams
-from st_pages.st_service1 import find_sentence_idxs, get_projects, \
-    get_bert, get_embeddings, get_long_embeddings, get_dataframes, find_similar
+from st_pages.search_engine import find_sentence_idxs, get_projects, \
+    get_bert, get_embeddings, get_dataframes, find_similar
 
 
 def st_load_docx_and_analyze():
@@ -52,7 +52,7 @@ def st_load_docx_and_analyze():
                 ngs = create_ngrams(request.split(), 6)
                 st.write(ngs)
                 for idx, ngm in enumerate(ngs):
-                    if idx%3 == 0:  # iteration interval
+                    if idx % 3 == 0:  # iteration interval
                         find_indexes_in_converted_reestr(ngm)
                         st.write({"search text": ngm})
                         search_res = find_projects_by_request(ngm)
@@ -67,11 +67,13 @@ def st_load_docx_and_analyze():
             st.write("Проверьте формат файла")
             print(f"{type(e)}: {e}")
 
+
 @st.cache
 def get_df_by_indexes(indexes):
     reestr, _ = get_dataframes()
     search_result = reestr[reestr.index.isin(indexes)].sort_values(by=['status'], ascending=False)
     return search_result
+
 
 def update_indexes(df, all_indexes):
     new_indexes = list(df.index)
@@ -83,7 +85,7 @@ def update_indexes(df, all_indexes):
 
 def find_indexes_in_converted_reestr(search_request):
     from fuzzywuzzy import fuzz
-    embeddings_distilbert, converted_reestr, vectors_tfidf, tfidf_vectorizer = get_embeddings()
+    embeddings_distilbert, emdeddings_long, converted_reestr, vectors_tfidf, tfidf_vectorizer = get_embeddings()
 
     all_indexes = []
     for idx, sent in enumerate(converted_reestr):
@@ -91,15 +93,15 @@ def find_indexes_in_converted_reestr(search_request):
         if ratio > 80 and idx not in all_indexes:
             all_indexes.append(idx)
 
-    st.write({x[0]:x[1] for x in enumerate(converted_reestr) if x[0] in all_indexes})
+    st.write({x[0]: x[1] for x in enumerate(converted_reestr) if x[0] in all_indexes})
     return all_indexes
+
 
 @st.cache
 def find_projects_by_request(search_request):
     project_reestr, rzd_requests = get_dataframes()
-    embeddings_distilbert, converted_reestr, vectors_tfidf, tfidf_vectorizer = get_embeddings()
+    embeddings_distilbert, embeddings_long, converted_reestr, vectors_tfidf, tfidf_vectorizer = get_embeddings()
     model = get_bert()
-    embeddings_distilbert_long = get_long_embeddings(project_reestr["project_desc"].values, model)
 
     # set TFIDF
     lemmatizer = WordNetLemmatizer()
@@ -112,7 +114,7 @@ def find_projects_by_request(search_request):
                               representations=REPRESENTATIONS,
                               token_fmt="tfidf",
                               bert_model=model,
-                              embeddings_distilbert_long=embeddings_distilbert_long,
+                              embeddings_distilbert_long=embeddings_long,
                               tfidf_vectorizer=tfidf_vectorizer,
                               tfidf_lemmatizer=lemmatizer)
     searches = np.array(converted_reestr)[idxs]
@@ -120,10 +122,10 @@ def find_projects_by_request(search_request):
     all_indexes = []
     if searches.size > 0:
         for s in searches:
-            res = get_projects(project_reestr, "project_desc", s, 64)
+            res = get_projects(project_reestr, ["project_desc"], s, 64)
             res_indexes1 = list(res.head(4).index) if res is not None else []
             vect = model.encode([s])
-            similar_indexes = find_similar(vect, embeddings_distilbert_long)
+            similar_indexes = find_similar(vect, embeddings_long)
             similar_data = project_reestr.iloc[similar_indexes].sort_values(by=['status'])
             res_indexes2 = list(similar_data.index)
 
