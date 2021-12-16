@@ -40,6 +40,7 @@ def fast_search():
     st.markdown("** *Введите неполный запрос и нажмите на Enter, чтобы увидеть список подсказок:* **")
     user_input = st.text_input("Введите неполный запрос:")
     save_logs(f"FAST SEARCH: {user_input} ({ac_choice})")
+    print(f"FAST SEARCH: {user_input} ({ac_choice})")
 
     user_output = get_searches(user_input, autocomplete=autocomplete)
     for s in user_output:
@@ -64,6 +65,7 @@ def fast_search():
         st.markdown("** *Пример выдачи при выборе результата из подсказок: * **")
         user_choice = st.selectbox("Выбор результата", user_output)
         save_logs(f"FAST SEARCH [NEXT]: {user_input} ({ac_choice})")
+        print(f"FAST SEARCH [NEXT]: {user_input} ({ac_choice})")
         res = get_projects(data, columns, user_choice, thresh=72)
 
         st.markdown("----")

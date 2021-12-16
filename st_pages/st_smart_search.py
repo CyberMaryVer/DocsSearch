@@ -44,6 +44,7 @@ def st_serious_search():
 
     if True:
         save_logs(f"SMART SEARCH: {user_input}")
+        print(f"SMART SEARCH: {user_input}")
         st.markdown("----")
         st.write(f"### Результат:")
         idxs = find_sentence_idxs(user_input,
